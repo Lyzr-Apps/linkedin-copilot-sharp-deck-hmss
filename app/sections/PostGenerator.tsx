@@ -1,7 +1,7 @@
 'use client'
 
 import React, { useState, useEffect } from 'react'
-import { FiCopy, FiCheck, FiEdit3, FiHash, FiTrendingUp, FiInfo } from 'react-icons/fi'
+import { FiCopy, FiCheck, FiEdit3, FiHash, FiTrendingUp, FiInfo, FiSend, FiLinkedin, FiAlertCircle } from 'react-icons/fi'
 import { callAIAgent } from '@/lib/aiAgent'
 import parseLLMJson from '@/lib/jsonParser'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
@@ -47,6 +47,8 @@ export default function PostGenerator({ showSample }: PostGeneratorProps) {
   const [error, setError] = useState<string | null>(null)
   const [result, setResult] = useState<PostResult | null>(null)
   const [copiedId, setCopiedId] = useState<string | null>(null)
+  const [publishing, setPublishing] = useState(false)
+  const [publishStatus, setPublishStatus] = useState<{ type: 'success' | 'error'; message: string } | null>(null)
 
   useEffect(() => {
     if (showSample) {
@@ -99,6 +101,41 @@ export default function PostGenerator({ showSample }: PostGeneratorProps) {
       setError('An unexpected error occurred. Please try again.')
     } finally {
       setLoading(false)
+    }
+  }
+
+  const handlePostToLinkedIn = async () => {
+    if (!result?.post_content) return
+    setPublishing(true)
+    setPublishStatus(null)
+
+    try {
+      const fullPost = result.post_content +
+        (Array.isArray(result.hashtags) && result.hashtags.length > 0
+          ? '\n\n' + result.hashtags.join(' ')
+          : '')
+
+      const message = `Post the following content to LinkedIn:\n\n${fullPost}`
+      const res = await callAIAgent(message, AGENT_ID)
+
+      if (res.success) {
+        setPublishStatus({
+          type: 'success',
+          message: 'Your post has been submitted to LinkedIn successfully.',
+        })
+      } else {
+        setPublishStatus({
+          type: 'error',
+          message: res.error || 'Failed to post to LinkedIn. Please try again.',
+        })
+      }
+    } catch (e) {
+      setPublishStatus({
+        type: 'error',
+        message: 'An unexpected error occurred while posting. Please try again.',
+      })
+    } finally {
+      setPublishing(false)
     }
   }
 
@@ -216,15 +253,46 @@ export default function PostGenerator({ showSample }: PostGeneratorProps) {
                 <p className="whitespace-pre-wrap text-sm text-gray-800 leading-relaxed">{displayResult.post_content}</p>
                 <div className="flex items-center justify-between mt-3 pt-3 border-t border-gray-200">
                   <span className="text-xs text-gray-500">{charCount} characters</span>
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    onClick={() => copyToClipboard(displayResult.post_content ?? '', 'post')}
-                    className="text-gray-500 hover:text-[#0077B5]"
-                  >
-                    {copiedId === 'post' ? <><FiCheck className="w-4 h-4 mr-1 text-green-600" /> Copied</> : <><FiCopy className="w-4 h-4 mr-1" /> Copy</>}
-                  </Button>
+                  <div className="flex items-center gap-2">
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={() => copyToClipboard(displayResult.post_content ?? '', 'post')}
+                      className="text-gray-500 hover:text-[#0077B5]"
+                    >
+                      {copiedId === 'post' ? <><FiCheck className="w-4 h-4 mr-1 text-green-600" /> Copied</> : <><FiCopy className="w-4 h-4 mr-1" /> Copy</>}
+                    </Button>
+                    <Button
+                      size="sm"
+                      onClick={handlePostToLinkedIn}
+                      disabled={publishing}
+                      className="bg-[#0077B5] hover:bg-[#005f8d] text-white gap-1.5"
+                    >
+                      {publishing ? (
+                        <><Spinner className="h-3.5 w-3.5" /> Posting...</>
+                      ) : (
+                        <><FiSend className="w-3.5 h-3.5" /> Post to LinkedIn</>
+                      )}
+                    </Button>
+                  </div>
                 </div>
+
+                {publishStatus && (
+                  <div className={`mt-3 flex items-start gap-2 rounded-lg p-3 border ${
+                    publishStatus.type === 'success'
+                      ? 'bg-green-50 border-green-200'
+                      : 'bg-red-50 border-red-300'
+                  }`}>
+                    {publishStatus.type === 'success' ? (
+                      <FiLinkedin className="w-4 h-4 text-green-600 mt-0.5 shrink-0" />
+                    ) : (
+                      <FiAlertCircle className="w-4 h-4 text-red-500 mt-0.5 shrink-0" />
+                    )}
+                    <p className={`text-sm ${publishStatus.type === 'success' ? 'text-green-700' : 'text-red-700'}`}>
+                      {publishStatus.message}
+                    </p>
+                  </div>
+                )}
               </div>
 
               {Array.isArray(displayResult.hashtags) && displayResult.hashtags.length > 0 && (

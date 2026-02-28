@@ -1,7 +1,7 @@
 'use client'
 
 import React from 'react'
-import { FiLinkedin } from 'react-icons/fi'
+import { FiLinkedin, FiCheckCircle } from 'react-icons/fi'
 import { Switch } from '@/components/ui/switch'
 import { Label } from '@/components/ui/label'
 
@@ -23,13 +23,24 @@ export default function Header({ showSample, onToggleSample }: HeaderProps) {
             <p className="text-sm text-gray-500">AI-powered tools to elevate your LinkedIn presence</p>
           </div>
         </div>
-        <div className="flex items-center gap-2">
-          <Label htmlFor="sample-toggle" className="text-sm text-gray-500 cursor-pointer">Sample Data</Label>
-          <Switch
-            id="sample-toggle"
-            checked={showSample}
-            onCheckedChange={onToggleSample}
-          />
+        <div className="flex items-center gap-4">
+          {/* LinkedIn Connection Status */}
+          <div className="hidden sm:flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-green-50 border border-green-200">
+            <FiCheckCircle className="w-3.5 h-3.5 text-green-600" />
+            <span className="text-xs font-medium text-green-700">LinkedIn Connected</span>
+          </div>
+          <div className="sm:hidden flex items-center gap-1 px-2 py-1 rounded-full bg-green-50 border border-green-200">
+            <FiLinkedin className="w-3 h-3 text-green-600" />
+            <div className="w-1.5 h-1.5 rounded-full bg-green-500" />
+          </div>
+          <div className="flex items-center gap-2">
+            <Label htmlFor="sample-toggle" className="text-sm text-gray-500 cursor-pointer">Sample Data</Label>
+            <Switch
+              id="sample-toggle"
+              checked={showSample}
+              onCheckedChange={onToggleSample}
+            />
+          </div>
         </div>
       </div>
     </header>
