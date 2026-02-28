@@ -4,6 +4,17 @@ import parseLLMJson from '@/lib/jsonParser'
 const LYZR_TASK_URL = 'https://agent-prod.studio.lyzr.ai/v3/inference/chat/task'
 const LYZR_API_KEY = process.env.LYZR_API_KEY || ''
 
+/**
+ * GET /api/agent — Health check endpoint
+ */
+export async function GET() {
+  return NextResponse.json({
+    status: 'ok',
+    configured: !!LYZR_API_KEY,
+    timestamp: new Date().toISOString(),
+  })
+}
+
 // Types
 interface ArtifactFile {
   file_url: string

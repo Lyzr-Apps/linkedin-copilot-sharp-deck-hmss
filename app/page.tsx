@@ -1,9 +1,10 @@
 'use client'
 
-import React, { useState } from 'react'
-import { FiEdit3, FiTarget, FiUser, FiLinkedin } from 'react-icons/fi'
+import React, { useState, useEffect } from 'react'
+import { FiEdit3, FiTarget, FiUser, FiLinkedin, FiAlertTriangle, FiRefreshCw } from 'react-icons/fi'
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs'
 import { Card, CardContent } from '@/components/ui/card'
+import { Button } from '@/components/ui/button'
 
 import Header from './sections/Header'
 import PostGenerator from './sections/PostGenerator'
@@ -73,6 +74,41 @@ const THEME_VARS = {
 export default function Page() {
   const [showSample, setShowSample] = useState(false)
   const [activeTab, setActiveTab] = useState('post-generator')
+  const [backendStatus, setBackendStatus] = useState<'checking' | 'connected' | 'error'>('checking')
+
+  useEffect(() => {
+    let retries = 0
+    const checkBackend = async () => {
+      try {
+        const res = await fetch('/api/agent', { method: 'GET' })
+        if (res.ok) {
+          setBackendStatus('connected')
+        } else if (retries < 3) {
+          retries++
+          setTimeout(checkBackend, 2000)
+        } else {
+          setBackendStatus('error')
+        }
+      } catch {
+        if (retries < 3) {
+          retries++
+          setTimeout(checkBackend, 2000)
+        } else {
+          setBackendStatus('error')
+        }
+      }
+    }
+    checkBackend()
+  }, [])
+
+  const retryConnection = () => {
+    setBackendStatus('checking')
+    fetch('/api/agent', { method: 'GET' })
+      .then(res => {
+        setBackendStatus(res.ok ? 'connected' : 'error')
+      })
+      .catch(() => setBackendStatus('error'))
+  }
 
   return (
     <ErrorBoundary>
@@ -80,6 +116,28 @@ export default function Page() {
         <Header showSample={showSample} onToggleSample={setShowSample} />
 
         <main className="max-w-6xl mx-auto px-4 sm:px-6 py-6">
+          {backendStatus === 'error' && (
+            <Card className="mb-6 border-amber-300 bg-amber-50">
+              <CardContent className="py-4">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-2">
+                    <FiAlertTriangle className="w-4 h-4 text-amber-600 shrink-0" />
+                    <p className="text-sm text-amber-800">
+                      Unable to connect to the backend. The server may still be starting up. You can use Sample Data mode while waiting.
+                    </p>
+                  </div>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={retryConnection}
+                    className="shrink-0 ml-3 border-amber-300 text-amber-700 hover:bg-amber-100"
+                  >
+                    <FiRefreshCw className="w-3.5 h-3.5 mr-1" /> Retry
+                  </Button>
+                </div>
+              </CardContent>
+            </Card>
+          )}
           <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
             <TabsList className="grid w-full grid-cols-3 mb-6 bg-white border border-gray-200 h-12">
               <TabsTrigger value="post-generator" className="flex items-center gap-2 data-[state=active]:bg-[#0077B5] data-[state=active]:text-white transition-all">
