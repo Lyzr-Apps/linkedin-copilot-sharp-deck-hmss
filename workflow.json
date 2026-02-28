@@ -1,0 +1,75 @@
+{
+  "workflow": {
+    "nodes": [
+      {"id": "input_node", "type": "Input", "label": "User Input", "nodeCategory": "input"},
+      {"id": "post_generator_agent", "type": "Agent", "label": "LinkedIn Post Generator", "nodeCategory": "agent", "agent_id": "69a25d62affa763185fc38d4"},
+      {"id": "engagement_coach_agent", "type": "Agent", "label": "LinkedIn Engagement Coach", "nodeCategory": "agent", "agent_id": "69a25d620a6394e18d88a081"},
+      {"id": "profile_optimizer_agent", "type": "Agent", "label": "LinkedIn Profile Optimizer", "nodeCategory": "agent", "agent_id": "69a25d63305bea55e2780a99"},
+      {"id": "output_node", "type": "Output", "label": "Results", "nodeCategory": "end"}
+    ],
+    "edges": [
+      {"source": "input_node", "target": "post_generator_agent"},
+      {"source": "input_node", "target": "engagement_coach_agent"},
+      {"source": "input_node", "target": "profile_optimizer_agent"},
+      {"source": "post_generator_agent", "target": "output_node"},
+      {"source": "engagement_coach_agent", "target": "output_node"},
+      {"source": "profile_optimizer_agent", "target": "output_node"}
+    ]
+  },
+  "agents": [
+    {
+      "agent_id": "69a25d62affa763185fc38d4",
+      "name": "LinkedIn Post Generator",
+      "description": "Expert LinkedIn content strategist and copywriter that generates professional, engaging LinkedIn posts tailored to the user's industry, tone preferences, and career goals.",
+      "agent_role": "Expert LinkedIn content strategist and copywriter",
+      "agent_goal": "Generate professional, engaging LinkedIn posts tailored to the user's industry, tone preferences, and career goals",
+      "provider_id": "openai",
+      "model": "gpt-4.1",
+      "temperature": 0.8,
+      "top_p": 0.9,
+      "agent_type": "json",
+      "capabilities": ["text"],
+      "tool_configs": [],
+      "managed_agents": [],
+      "image_output_config": null,
+      "voice_config": null,
+      "file_output": false
+    },
+    {
+      "agent_id": "69a25d620a6394e18d88a081",
+      "name": "LinkedIn Engagement Coach",
+      "description": "Professional LinkedIn engagement and networking strategist that analyzes activity patterns and provides actionable engagement strategies, comment suggestions, and networking tips.",
+      "agent_role": "Professional LinkedIn engagement and networking strategist",
+      "agent_goal": "Analyze LinkedIn activity patterns and provide actionable engagement strategies, comment suggestions, and networking tips",
+      "provider_id": "openai",
+      "model": "gpt-4.1",
+      "temperature": 0.7,
+      "top_p": 0.9,
+      "agent_type": "json",
+      "capabilities": ["text"],
+      "tool_configs": [],
+      "managed_agents": [],
+      "image_output_config": null,
+      "voice_config": null,
+      "file_output": false
+    },
+    {
+      "agent_id": "69a25d63305bea55e2780a99",
+      "name": "LinkedIn Profile Optimizer",
+      "description": "Expert LinkedIn profile consultant and personal branding specialist that analyzes and optimizes LinkedIn profile sections to maximize visibility, searchability, and professional appeal.",
+      "agent_role": "Expert LinkedIn profile consultant and personal branding specialist",
+      "agent_goal": "Analyze and optimize LinkedIn profile sections to maximize visibility, searchability, and professional appeal",
+      "provider_id": "openai",
+      "model": "gpt-4.1",
+      "temperature": 0.6,
+      "top_p": 0.9,
+      "agent_type": "json",
+      "capabilities": ["text"],
+      "tool_configs": [],
+      "managed_agents": [],
+      "image_output_config": null,
+      "voice_config": null,
+      "file_output": false
+    }
+  ]
+}

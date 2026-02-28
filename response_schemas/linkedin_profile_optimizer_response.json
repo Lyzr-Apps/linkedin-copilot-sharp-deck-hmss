@@ -1,0 +1,56 @@
+{
+  "agent_name": "LinkedIn Profile Optimizer",
+  "agent_id": "69a25d63305bea55e2780a99",
+  "description": "Expert LinkedIn profile consultant and personal branding specialist that analyzes and optimizes LinkedIn profile sections to maximize visibility, searchability, and professional appeal.",
+  "agent_type": "json",
+  "accessor": "result",
+  "auto_generated": true,
+  "response_format": {
+    "type": "json_schema",
+    "json_schema": {
+      "name": "ProfileOptimizerResponse",
+      "strict": true,
+      "schema": {
+        "type": "object",
+        "properties": {
+          "optimized_headline": {"type": "string", "description": "Optimized headline max 220 chars"},
+          "optimized_about": {"type": "string", "description": "Compelling About section"},
+          "keyword_suggestions": {"type": "array", "items": {"type": "string"}, "description": "10 SEO keywords"},
+          "section_recommendations": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "section_name": {"type": "string"},
+                "recommendation": {"type": "string"}
+              },
+              "required": ["section_name", "recommendation"],
+              "additionalProperties": false
+            },
+            "description": "Recommendations for profile sections"
+          },
+          "visibility_score": {"type": "number", "description": "Profile strength 1-100"},
+          "improvement_priorities": {"type": "array", "items": {"type": "string"}, "description": "Top 3 priorities"}
+        },
+        "required": ["optimized_headline", "optimized_about", "keyword_suggestions", "section_recommendations", "visibility_score", "improvement_priorities"],
+        "additionalProperties": false
+      }
+    }
+  },
+  "response_schema": {
+    "optimized_headline": "string",
+    "optimized_about": "string",
+    "keyword_suggestions": ["string"],
+    "section_recommendations": [{"section_name": "string", "recommendation": "string"}],
+    "visibility_score": "number",
+    "improvement_priorities": ["string"]
+  },
+  "example_response": {
+    "optimized_headline": "Senior Software Engineer | Building Scalable Cloud Solutions | AWS Certified",
+    "optimized_about": "Compelling About section with 3-5 paragraphs",
+    "keyword_suggestions": ["cloud architecture", "AWS", "leadership", "agile", "DevOps"],
+    "section_recommendations": [{"section_name": "Featured", "recommendation": "Add 3 key projects showcasing your best work"}],
+    "visibility_score": 75,
+    "improvement_priorities": ["Update headline with keywords", "Add Featured section", "Get skill endorsements"]
+  }
+}

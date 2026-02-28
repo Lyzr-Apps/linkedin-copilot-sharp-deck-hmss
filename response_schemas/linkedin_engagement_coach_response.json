@@ -1,0 +1,55 @@
+{
+  "agent_name": "LinkedIn Engagement Coach",
+  "agent_id": "69a25d620a6394e18d88a081",
+  "description": "Professional LinkedIn engagement and networking strategist that analyzes activity patterns and provides actionable engagement strategies, comment suggestions, and networking tips.",
+  "agent_type": "json",
+  "accessor": "result",
+  "auto_generated": true,
+  "response_format": {
+    "type": "json_schema",
+    "json_schema": {
+      "name": "EngagementCoachResponse",
+      "strict": true,
+      "schema": {
+        "type": "object",
+        "properties": {
+          "engagement_strategy": {
+            "type": "object",
+            "properties": {
+              "daily_actions": {"type": "array", "items": {"type": "string"}},
+              "weekly_goals": {"type": "array", "items": {"type": "string"}}
+            },
+            "required": ["daily_actions", "weekly_goals"],
+            "additionalProperties": false
+          },
+          "comment_suggestions": {"type": "array", "items": {"type": "string"}, "description": "3 thoughtful comment suggestions"},
+          "connection_templates": {"type": "array", "items": {"type": "string"}, "description": "2 connection request messages"},
+          "profile_tips": {"type": "array", "items": {"type": "string"}, "description": "3 profile improvement tips"},
+          "networking_score": {"type": "number", "description": "Activity level rating 1-10"}
+        },
+        "required": ["engagement_strategy", "comment_suggestions", "connection_templates", "profile_tips", "networking_score"],
+        "additionalProperties": false
+      }
+    }
+  },
+  "response_schema": {
+    "engagement_strategy": {
+      "daily_actions": ["string"],
+      "weekly_goals": ["string"]
+    },
+    "comment_suggestions": ["string"],
+    "connection_templates": ["string"],
+    "profile_tips": ["string"],
+    "networking_score": "number"
+  },
+  "example_response": {
+    "engagement_strategy": {
+      "daily_actions": ["Comment on 5 posts in your industry", "Share one relevant article"],
+      "weekly_goals": ["Send 10 connection requests", "Publish 1 original post"]
+    },
+    "comment_suggestions": ["Thoughtful comment 1", "Thoughtful comment 2", "Thoughtful comment 3"],
+    "connection_templates": ["Connection request template 1", "Connection request template 2"],
+    "profile_tips": ["Tip 1", "Tip 2", "Tip 3"],
+    "networking_score": 7
+  }
+}

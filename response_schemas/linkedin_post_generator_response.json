@@ -1,0 +1,41 @@
+{
+  "agent_name": "LinkedIn Post Generator",
+  "agent_id": "69a25d62affa763185fc38d4",
+  "description": "Expert LinkedIn content strategist and copywriter that generates professional, engaging LinkedIn posts tailored to the user's industry, tone preferences, and career goals.",
+  "agent_type": "json",
+  "accessor": "result",
+  "auto_generated": true,
+  "response_format": {
+    "type": "json_schema",
+    "json_schema": {
+      "name": "PostGeneratorResponse",
+      "strict": true,
+      "schema": {
+        "type": "object",
+        "properties": {
+          "post_content": {"type": "string", "description": "The full LinkedIn post text"},
+          "hashtags": {"type": "array", "items": {"type": "string"}, "description": "Array of relevant hashtags"},
+          "post_type": {"type": "string", "description": "Category of the post"},
+          "estimated_engagement": {"type": "string", "description": "Engagement level prediction: low/medium/high"},
+          "writing_tip": {"type": "string", "description": "Brief tip for improving the post"}
+        },
+        "required": ["post_content", "hashtags", "post_type", "estimated_engagement", "writing_tip"],
+        "additionalProperties": false
+      }
+    }
+  },
+  "response_schema": {
+    "post_content": "string",
+    "hashtags": ["string"],
+    "post_type": "string",
+    "estimated_engagement": "string",
+    "writing_tip": "string"
+  },
+  "example_response": {
+    "post_content": "The full LinkedIn post text",
+    "hashtags": ["#Leadership", "#CareerGrowth"],
+    "post_type": "thought-leadership",
+    "estimated_engagement": "high",
+    "writing_tip": "Brief tip for improving the post"
+  }
+}
