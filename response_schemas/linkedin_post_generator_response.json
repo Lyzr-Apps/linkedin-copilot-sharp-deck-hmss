@@ -1,7 +1,7 @@
 {
   "agent_name": "LinkedIn Post Generator",
   "agent_id": "69a25d62affa763185fc38d4",
-  "description": "Expert LinkedIn content strategist and copywriter that generates professional, engaging LinkedIn posts tailored to the user's industry, tone preferences, and career goals.",
+  "description": "Expert LinkedIn content strategist and copywriter that generates professional, engaging LinkedIn posts and can publish them directly to LinkedIn via Composio LINKEDIN_CREATE_LINKED_IN_POST tool.",
   "agent_type": "json",
   "accessor": "result",
   "auto_generated": true,
@@ -17,9 +17,11 @@
           "hashtags": {"type": "array", "items": {"type": "string"}, "description": "Array of relevant hashtags"},
           "post_type": {"type": "string", "description": "Category of the post"},
           "estimated_engagement": {"type": "string", "description": "Engagement level prediction: low/medium/high"},
-          "writing_tip": {"type": "string", "description": "Brief tip for improving the post"}
+          "writing_tip": {"type": "string", "description": "Brief tip for improving the post"},
+          "posted_successfully": {"type": "boolean", "description": "Whether the post was published to LinkedIn"},
+          "post_status": {"type": "string", "description": "Status message about the LinkedIn posting action"}
         },
-        "required": ["post_content", "hashtags", "post_type", "estimated_engagement", "writing_tip"],
+        "required": ["post_content", "hashtags", "post_type", "estimated_engagement", "writing_tip", "posted_successfully", "post_status"],
         "additionalProperties": false
       }
     }
@@ -29,13 +31,17 @@
     "hashtags": ["string"],
     "post_type": "string",
     "estimated_engagement": "string",
-    "writing_tip": "string"
+    "writing_tip": "string",
+    "posted_successfully": "boolean",
+    "post_status": "string"
   },
   "example_response": {
     "post_content": "The full LinkedIn post text",
     "hashtags": ["#Leadership", "#CareerGrowth"],
     "post_type": "thought-leadership",
     "estimated_engagement": "high",
-    "writing_tip": "Brief tip for improving the post"
+    "writing_tip": "Brief tip for improving the post",
+    "posted_successfully": true,
+    "post_status": "Post published to LinkedIn successfully"
   }
 }

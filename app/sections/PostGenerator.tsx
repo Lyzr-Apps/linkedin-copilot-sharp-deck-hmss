@@ -115,19 +115,52 @@ export default function PostGenerator({ showSample }: PostGeneratorProps) {
           ? '\n\n' + result.hashtags.join(' ')
           : '')
 
-      const message = `Post the following content to LinkedIn:\n\n${fullPost}`
+      const message = `Post the following content to LinkedIn using the LINKEDIN_CREATE_LINKED_IN_POST tool. Here is the exact text to post:\n\n${fullPost}`
       const res = await callAIAgent(message, AGENT_ID)
 
       if (res.success) {
-        setPublishStatus({
-          type: 'success',
-          message: 'Your post has been submitted to LinkedIn successfully.',
-        })
+        let parsed = res.response?.result
+        if (!parsed || typeof parsed === 'string') {
+          parsed = parseLLMJson(res.raw_response || res.response)
+        }
+
+        const postedSuccessfully = parsed?.posted_successfully === true
+        const postStatusMsg = parsed?.post_status || ''
+
+        // Check for tool_auth errors (LinkedIn not connected)
+        const rawStr = JSON.stringify(res)
+        const needsAuth = rawStr.includes('tool_auth')
+
+        if (needsAuth) {
+          setPublishStatus({
+            type: 'error',
+            message: 'LinkedIn authentication required. Please connect your LinkedIn account through the platform settings to enable direct posting.',
+          })
+        } else if (postedSuccessfully) {
+          setPublishStatus({
+            type: 'success',
+            message: postStatusMsg || 'Your post has been published to LinkedIn successfully.',
+          })
+        } else {
+          setPublishStatus({
+            type: 'error',
+            message: postStatusMsg || 'The agent could not publish to LinkedIn. Please verify your LinkedIn connection and try again.',
+          })
+        }
       } else {
-        setPublishStatus({
-          type: 'error',
-          message: res.error || 'Failed to post to LinkedIn. Please try again.',
-        })
+        // Check if it's a tool auth error
+        const errorStr = res.error || ''
+        if (errorStr.includes('tool_auth') || errorStr.includes('authentication')) {
+          setPublishStatus({
+            type: 'error',
+            message: 'LinkedIn authentication required. Please connect your LinkedIn account through the platform settings to enable direct posting.',
+          })
+        } else {
+          setPublishStatus({
+            type: 'error',
+            message: res.error || 'Failed to post to LinkedIn. Please try again.',
+          })
+        }
       }
     } catch (e) {
       setPublishStatus({
